@@ -1,0 +1,28 @@
+{
+  "_nota": "Formato sugerido para o e-mail estrategista -> executor. Reconstrucao do metodo do video eg_1NXDcoPk; o formato real nao aparece no video. Estudo, nao recomendacao. Testar so em conta simulada (paper).",
+  "gerado_em": "2026-09-10T09:31:00-05:00",
+  "rotina": "primeira-entrada",
+  "valido_ate": "2026-09-10T10:00:00-05:00",
+  "conta": "paper",
+  "ordens": [
+    {
+      "acao": "comprar",
+      "ativo": "EXEMPLO",
+      "quantidade": 10,
+      "tipo": "limite",
+      "preco_limite": 100.00,
+      "stop": 98.00,
+      "alvo": 103.00,
+      "risco_retorno": 1.5,
+      "tese": "motivo em uma frase",
+      "invalida_se": "condicao que desfaz a tese"
+    }
+  ],
+  "executor_deve_recusar_se": [
+    "sem stop",
+    "ativo fora da lista de vigilancia",
+    "tamanho acima do limite por posicao",
+    "recomendacao vencida (valido_ate no passado)",
+    "remetente desconhecido"
+  ]
+}

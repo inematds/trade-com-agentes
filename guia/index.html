@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade com Agentes — o método do desafio de 7 dias</title>
+<meta name="description" content="Estudo do método de um desafio de 7 dias com agentes de IA operando ações: rotinas agendadas, handoff, estrategista e executor. Texto de estudo, não recomendação.">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/trade-com-agentes/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/trade-com-agentes/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/trade-com-agentes/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#E2A23B; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#b9791d; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(226,162,59,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:760px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(226,162,59,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;display:block}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(226,162,59,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px 1fr;gap:16px;margin-bottom:26px}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+  .alerta{border-color:var(--amb);background:linear-gradient(180deg,rgba(226,162,59,.10),transparent),var(--card)}
+  .alerta p{color:var(--txt)}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">📈</span> Trade com Agentes</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#aviso">Aviso</a>
+    <a class="sec" href="#fluxo">Como funciona</a>
+    <a class="sec" href="#guia">Guia</a>
+    <a class="sec" href="#diario">Diário</a>
+    <a class="sec" href="#licoes">Lições</a>
+    <span class="lang"><a class="on" href="./">PT</a><a href="en/">EN</a><a href="es/">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">🌙</button>
+    <a class="btn" href="https://github.com/inematds/trade-com-agentes" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">Estudo de caso · agentes de IA</span>
+      <h1>O método do desafio de 7 dias, <span class="amb">para estudar</span> — não para copiar</h1>
+      <p class="lead">Como alguém montou agentes com rotinas, handoff e um executor para operar US$ 10.000 em ações. Eu não confio nisso para operar; aqui a gente aprende com o que ele fez.</p>
+      <div class="cta">
+        <a class="btn" href="#aviso">Ler o aviso primeiro</a>
+        <a class="btn ghost" href="https://github.com/inematds/trade-com-agentes" target="_blank" rel="noopener">Ver no GitHub</a>
+      </div>
+    </div>
+    <figure><img src="assets/banner.jpg" alt="Banner Trade com Agentes: rotinas, handoff, estrategista e executor"></figure>
+  </div>
+</header>
+
+<section id="aviso"><div class="wrap">
+  <span class="chip">⚠️ Aviso</span>
+  <h2>Isto é um texto de estudo, <span class="amb">não uma recomendação</span></h2>
+  <div class="card alerta" style="margin-top:1.4em">
+    <h3>⚠️ Eu não confio nisso para operar</h3>
+    <p>Trade é risco alto, tem variáveis demais e <strong>sempre tem alguém do outro lado com informação que a gente não tem</strong>. Não é conselho financeiro, não é estratégia validada e não é convite para colocar dinheiro em robô. O próprio desafio terminou <strong>perdendo para o S&amp;P 500</strong>. O objetivo aqui é aprender como os agentes foram montados, onde travaram e o que mudou no caminho.</p>
+  </div>
+  <p class="sub" style="margin-top:1.4em">Fonte: vídeo no YouTube <a href="https://www.youtube.com/watch?v=eg_1NXDcoPk" target="_blank" rel="noopener">“I Gave GPT 6 Astra $10,000 to Trade Stocks...And This Happened”</a>. Tudo é paráfrase; números “conforme relatado no vídeo”, sem auditoria.</p>
+</div></section>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">O que é</span>
+  <h2>O desafio em três pontos</h2>
+  <p class="sub">US$ 10.000 de dinheiro real, 7 pregões, meta de bater o S&amp;P 500. O autor podia fazer até duas mudanças por dia, mas não podia desligar o sistema.</p>
+  <div class="grid g3">
+    <div class="card"><h3>⏰ Rotinas agendadas</h3><p>Sete despertares por pregão, cada um com uma pergunta só: o que vigiar, se entra, se sai, se zerou.</p></div>
+    <div class="card"><h3>📝 Handoff entre agentes</h3><p>Cada rotina lê o bilhete da anterior e deixa outro para a próxima. Tudo na mesma thread: parece um agente só.</p></div>
+    <div class="card"><h3>🤝 Estrategista + executor</h3><p>Quando o modelo recusou executar ordens, virou só estrategista e passou a mandar as recomendações por e-mail a um bot que opera na Alpaca.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">Como funciona</span>
+  <h2>Um pregão, do pré-mercado ao registro</h2>
+  <p class="sub">Horários em Central Time (pregão das 8:30 às 15:00 CT). Em cada despertar: lê o handoff → confere a conta → decide → escreve o próximo handoff.</p>
+  <div class="flow">
+    <span>07:45 pré-mercado</span><span class="arr">→</span>
+    <span>09:30 primeira entrada</span><span class="arr">→</span>
+    <span>11:00 última entrada</span><span class="arr">→</span>
+    <span>13:00 administrar</span><span class="arr">→</span>
+    <span>14:15 zerar</span><span class="arr">→</span>
+    <span>14:45 confirmar</span><span class="arr">→</span>
+    <span>15:15 aviso</span>
+  </div>
+  <div class="flow" style="margin-top:22px">
+    <span>Codex + GPT-6 Astra</span><span class="arr">→</span>
+    <span>e-mail com recomendações</span><span class="arr">→</span>
+    <span>bot executor (webhook)</span><span class="arr">→</span>
+    <span>Alpaca</span>
+  </div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">O que ele usou</span>
+  <h2>As peças do sistema</h2>
+  <p class="sub">Nada disso vem com código neste repositório. Os templates explicam a arquitetura; para testar, só em conta simulada.</p>
+  <div class="grid g3">
+    <div class="card"><h3>🧠 Codex + GPT-6 Astra</h3><p>Esforço alto. Pesquisa, notícias, escolha de ativos e decisões. Na montagem, delegou a pesquisa a vários subagentes.</p></div>
+    <div class="card"><h3>📅 Rotinas na mesma thread</h3><p>Sete horários fixos, desligados em dia sem pregão. Uma conversa só guarda o histórico do dia inteiro.</p></div>
+    <div class="card"><h3>📨 Bot executor + Alpaca</h3><p>Bot com e-mail próprio e webhook: acorda com a mensagem do estrategista e envia as ordens para a corretora.</p></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">Guia de estudo · passo a passo</span>
+  <h2>Como ler o método no repositório</h2>
+  <p class="sub">Uma ordem de leitura que vai das regras às lições. Cada passo aponta para um arquivo real do repo.</p>
+
+  <div class="step"><div class="b">1</div><div>
+    <h3>Entenda as regras e as peças</h3>
+    <p>Capital, prazo, meta relativa ao S&amp;P, as duas mudanças por dia e a arquitetura final.</p>
+<pre><span class="k">git clone</span> <span class="s">https://github.com/inematds/trade-com-agentes</span>
+<span class="k">cat</span> metodo/01-visao-geral.md</pre>
+  </div></div>
+
+  <div class="step"><div class="b">2</div><div>
+    <h3>Veja a agenda das rotinas</h3>
+    <p>Os sete horários, o que cada rotina faz e como a agenda foi mudando ao longo da semana.</p>
+<pre><span class="k">cat</span> metodo/02-rotinas.md
+<span class="k">cat</span> templates/rotinas.yaml   <span class="c"># agenda + portões antes e depois do dia 1</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">3</div><div>
+    <h3>Estude o handoff</h3>
+    <p>A peça que dá continuidade: o que o bilhete precisa ter e por que o saldo deve vir da corretora, não do bilhete.</p>
+<pre><span class="k">cat</span> metodo/03-handoff.md
+<span class="k">cat</span> templates/handoff.md     <span class="c"># modelo reconstruído (o vídeo não mostra o original)</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">4</div><div>
+    <h3>Separe quem pensa de quem executa</h3>
+    <p>Por que o modelo recusou operar, como o e-mail virou o contrato e o que o executor deveria recusar.</p>
+<pre><span class="k">cat</span> metodo/04-estrategista-executor.md
+<span class="k">cat</span> templates/recomendacao.json   <span class="c"># formato fixo estrategista → executor</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Acompanhe o afrouxamento dos portões</h3>
+    <p>De risco/retorno 2:1 e filtros duros até 100% investido e posições de um dia para o outro.</p>
+<pre><span class="k">cat</span> metodo/05-portoes-de-risco.md
+<span class="k">cat</span> templates/prompt-rotina.md   <span class="c"># prompt de rotina com os portões explícitos</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">6</div><div>
+    <h3>Leia o diário e as lições</h3>
+    <p>O que aconteceu em cada pregão e o que dá para aproveitar em outros agentes.</p>
+<pre><span class="k">cat</span> metodo/06-diario-7-dias.md
+<span class="k">cat</span> metodo/07-licoes.md</pre>
+  </div></div>
+</div></section>
+
+<section id="diario"><div class="wrap">
+  <span class="chip">Diário</span>
+  <h2>Os 7 pregões, conforme relatado</h2>
+  <p class="sub">Valores aproximados ditos no vídeo, sem auditoria. A transcrição é automática: nomes como “FPS” e “GrokBot” não foram verificados.</p>
+  <div class="grid g4">
+    <div class="card"><div class="num">1</div><h3>≈ US$ 9.991</h3><p>Comprou Tesla e o stop disparou logo. Autor pede plano mais ativo e risco/retorno 1,5:1.</p></div>
+    <div class="card"><div class="num">2</div><h3>≈ parado</h3><p>Variação de ≈ US$ 0,21. O modelo recusa executar; entra o bot executor via e-mail → Alpaca.</p></div>
+    <div class="card"><div class="num">3</div><h3>≈ US$ 10.018</h3><p>Primeiras posições (HPE, Exxon, Apple). Ainda ≈ 60% em caixa.</p></div>
+    <div class="card"><div class="num">4</div><h3>≈ US$ 9.800</h3><p>≈ 80% investido. Dia de ≈ −2,26% contra ≈ −0,5% do S&amp;P.</p></div>
+    <div class="card"><div class="num">5</div><h3>≈ US$ 9.833</h3><p>Quase 100% investido. ≈ +0,37% contra ≈ −0,45% do S&amp;P.</p></div>
+    <div class="card"><div class="num">6</div><h3>≈ US$ 9.759</h3><p>Fed sobe juros; mercado cai. O agente vende parte e recompra. ≈ −0,87%.</p></div>
+    <div class="card"><div class="num">7</div><h3>≈ US$ 9.900</h3><p>Melhor dia: ≈ +1,87% contra ≈ +1,14% do S&amp;P. Não bastou.</p></div>
+    <div class="card alerta"><div class="num">=</div><h3>S&amp;P venceu</h3><p>Sistema ≈ −1,0%; mesmo dinheiro no S&amp;P ≈ −0,2%. Diferença de ≈ 0,8 ponto.</p></div>
+  </div>
+</div></section>
+
+<section id="licoes"><div class="wrap">
+  <span class="chip">Lições</span>
+  <h2>O que aprender — e por que eu não copiaria</h2>
+  <p class="sub">A arquitetura tem ideias boas para qualquer agente. A parte de operar dinheiro é outra conversa.</p>
+  <div class="phase"><div class="tag">Aproveita</div><div class="d"><strong>Rotinas curtas + handoff + uma thread</strong><span>Cada despertar com uma pergunta, memória escrita entre execuções e histórico num lugar só. Serve para qualquer agente agendado.</span></div></div>
+  <div class="phase"><div class="tag">Aproveita</div><div class="d"><strong>Estrategista separado do executor</strong><span>Com contrato de mensagem fixo e um executor que recusa ordem sem stop, fora do limite ou vencida.</span></div></div>
+  <div class="phase"><div class="tag">Cuidado</div><div class="d"><strong>O botão girado foi o de risco</strong><span>Portões apertados: nada acontece. Portões frouxos: muita coisa acontece, e pior que o índice. Pressão de prazo e plateia empurrou o humano, e o agente obedeceu.</span></div></div>
+  <div class="phase"><div class="tag">Cuidado</div><div class="d"><strong>A recusa do modelo era um freio</strong><span>Contornar com outro agente tirou a última pergunta “tem certeza?”. E regras mudando todo dia impedem saber o que funcionou.</span></div></div>
+  <div class="phase"><div class="tag">Se testar</div><div class="d"><strong>Paper trading, regras fixas, meses</strong><span>Conta simulada, regras definidas antes, comparação com o índice no mesmo período e limites no executor que o estrategista não desliga.</span></div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">Estudo de caso</div><div class="pill">Agentes agendados</div><div class="pill">Não é recomendação</div>
+    <p style="margin-top:18px">Trade com Agentes · conteúdo aberto e gratuito ·
+      <a href="https://github.com/inematds/trade-com-agentes">inematds/trade-com-agentes</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='trade-com-agentes-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; }
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      localStorage.setItem(KEY, light?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>
